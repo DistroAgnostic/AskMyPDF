@@ -16,14 +16,10 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
 # API Configuration
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
+api_key = st.secrets["GOOGLE_API_KEY"]
 
 # PDF Loader
-loader = PyPDFLoader(r'/run/media/light/Data/Code/Grow_DS/ML/GenAI/my_paper.pdf')
+loader = PyPDFLoader(r'/run/media/light/Data/Code/Grow_DS/ML/GenAI/AskMyPDF/my_paper.pdf')
 data = loader.load()
 
 # Text Splitting
@@ -68,3 +64,5 @@ if query:
 
 
     st.write("Chatbot response :",respones['answer'])
+
+# PDFChatConvervationUI
