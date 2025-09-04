@@ -6,3 +6,4 @@ langchain-community
 chromadb
 PyPDF2
 pypdf
+pysqlite3-binary
