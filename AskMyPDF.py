@@ -19,7 +19,7 @@ from langchain_core.prompts import ChatPromptTemplate
 api_key = st.secrets["GOOGLE_API_KEY"]
 
 # PDF Loader
-loader = PyPDFLoader(r'/run/media/light/Data/Code/Grow_DS/ML/GenAI/AskMyPDF/my_paper.pdf')
+loader = PyPDFLoader(r'my_paper.pdf')
 data = loader.load()
 
 # Text Splitting
