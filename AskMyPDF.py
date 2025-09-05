@@ -1,68 +1,60 @@
-import asyncio
-try:
-    asyncio.get_running_loop()
-except RuntimeError:
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+__import__("pysqlite3")
+import sys
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+
+import os
 import streamlit as st
 import google.generativeai as genai
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_community.vectorstores import Chroma
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
-# API Configuration
 api_key = st.secrets["GOOGLE_API_KEY"]
+genai.configure(api_key=api_key)
 
-# PDF Loader
-loader = PyPDFLoader(r'my_paper.pdf')
-data = loader.load()
+st.title("📄 PDF Chatbot with Gemini + LangChain")
 
-# Text Splitting
-text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1000,
-                                               chunk_overlap = 20)
-doc = text_splitter.split_documents(data)
+uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
 
-# Vector embedding and vercor storev
-vectorstore = Chroma.from_documents(documents = doc,
-                     embedding = GoogleGenerativeAIEmbeddings(model = "models/embedding-001"))
+if uploaded_file:
+    with open("temp.pdf", "wb") as f:
+        f.write(uploaded_file.read())
 
-# Retriver
-retriever = vectorstore.as_retriever(search_type = 'similarity')
+    loader = PyPDFLoader("temp.pdf")
+    data = loader.load()
 
-# define
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=20
+    )
+    docs = text_splitter.split_documents(data)
 
-llm = ChatGoogleGenerativeAI(model = 'gemini-2.5-flash')
-st.title("Chat With PDF")
+    vectorstore = Chroma.from_documents(
+        documents=docs,
+        embedding=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    )
 
-query = st.chat_input("Ask me anything: ")
-promt = query
+    retriever = vectorstore.as_retriever(search_type="similarity")
 
-system_output = (
-    "You ara my personal assistant to talk with PDF"
-    "{context}"
-)
-# Make ChatPromptTemplate
-prompt = ChatPromptTemplate.from_messages(
-    [('system',system_output),
-    ("human","{input}")]
-)
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
-# Create chains
+    prompt = ChatPromptTemplate.from_template(
+        "You are my personal assistant to help me talk with the PDF. "
+        "Use the following context to answer the question:\n\n{context}\n\nQuestion: {input}"
+    )
 
-if query:
-    question_answer_chain = create_stuff_documents_chain(llm,prompt)
-    rag_chain = create_retrieval_chain(retriever,question_answer_chain)
+    question_answer_chain = create_stuff_documents_chain(llm, prompt)
+    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 
-    respones = rag_chain.invoke({'input':query})
-    st.write("User query :",query)
-    print(respones["answer"])
+    query = st.chat_input("Ask me anything about the PDF:")
 
-
-    st.write("Chatbot response :",respones['answer'])
-
-# PDFChatConvervationUI
+    if query:
+        with st.spinner("Thinking..."):
+            response = rag_chain.invoke({"input": query})
+            st.write(response["answer"])
+else:
+    st.info("👆 Upload a PDF to get started")
