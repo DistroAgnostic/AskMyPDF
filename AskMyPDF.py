@@ -16,7 +16,7 @@ from langchain_core.prompts import ChatPromptTemplate
 api_key = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=api_key)
 
-st.title("📄 PDF Chatbot with Gemini + LangChain")
+st.title("📄 AskMyPDF – Chat with Any PDF Using Gemini + LangChain")
 
 uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
 
