@@ -45,7 +45,8 @@ if uploaded_file:
 
     vectorstore = Chroma.from_documents(
         documents=docs,
-        embedding=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        embedding=GoogleGenerativeAIEmbeddings(model="models/embedding-001"), 
+persist_directory=None
     )
     retriever = vectorstore.as_retriever(search_type="similarity")
 
