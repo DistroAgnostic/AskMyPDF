@@ -88,7 +88,8 @@ persist_directory=None
                 "input": query,
                 "chat_history": history_text
             })
- st.session_state.chat_history.append((query, response.get("answer", "")))
+
+st.session_state.chat_history.append((query, response.get("answer", "")))
 
     # Show chat history
     if st.session_state.chat_history:
