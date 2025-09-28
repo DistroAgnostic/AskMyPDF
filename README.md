@@ -1,6 +1,6 @@
 ## 🧠📄 AskMyPDF – Chat with Any PDF Using LangChain
 
-> Your personal AI assistant that reads, understands, and chats with your PDF documents – powered by Google Gemini and LangChain.
+> Your personal AI assistant that reads, understands, and chats with your PDF documents – powered by LangChain.
 
 ![AskMyPDF Banner](https://img.shields.io/badge/Powered%20By-Google%20Gemini-blue?logo=google)
 ![LangChain](https://img.shields.io/badge/Built%20With-LangChain-purple)
