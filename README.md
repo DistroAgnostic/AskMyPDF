@@ -1,4 +1,4 @@
-## 🧠📄 AskMyPDF – Chat with Any PDF Using Gemini + LangChain
+## 🧠📄 AskMyPDF – Chat with Any PDF Using LangChain
 
 > Your personal AI assistant that reads, understands, and chats with your PDF documents – powered by Google Gemini and LangChain.
 
