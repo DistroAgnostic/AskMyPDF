@@ -91,7 +91,7 @@ streamlit run app.py
 ### 🚧 To-Do
 
 * [ ] Upload multiple PDFs
-* [ ] Memory-enabled chat
+* [x] Memory-enabled chat
 * [ ] Save chat history
 * [ ] Shareable links to sessions
 
